@@ -1,0 +1,49 @@
+CASOS DE PRUEBA - REFUGIO DE ANIMALES
+
+1) Alta de perro
+Datos: ID=1, nombre=Firulais, edad=3, salud=Sano, raza=Labrador, tamano=Grande.
+Resultado esperado: se registra correctamente.
+
+2) Alta de gato
+Datos: ID=2, nombre=Mishi, edad=2, salud=Sano, color=Negro, condicion=Interior.
+Resultado esperado: se registra correctamente.
+
+3) ID repetido
+Registrar otro animal con ID=1.
+Resultado esperado: IdRepetidoException y el programa vuelve al menu.
+
+4) Alta de adoptante
+Registrar ID=10, nombre=Juan Perez, contacto=351555555, vivienda=Casa.
+Resultado esperado: se registra correctamente.
+
+5) Crear solicitud valida
+Solicitud ID=100, adoptante=10, animal=1.
+Resultado esperado: solicitud pendiente y animal 1 no disponible.
+
+6) Solicitud sobre animal no disponible
+Crear otra solicitud para animal 1.
+Resultado esperado: AnimalNoDisponibleException.
+
+7) Cancelar solicitud
+Cancelar solicitud 100.
+Resultado esperado: estado CANCELADA y animal 1 disponible.
+
+8) Confirmar solicitud
+Crear una nueva solicitud y confirmarla.
+Resultado esperado: estado CONFIRMADA y animal no disponible.
+
+9) Buscar ID inexistente
+Buscar animal 999.
+Resultado esperado: NoEncontradoException.
+
+10) Indice invalido
+Usar operator[] con una posicion fuera del catalogo.
+Resultado esperado: IndiceInvalidoException.
+
+11) Templates
+Ejecutar opcion 13.
+Resultado esperado: funcionan Coleccion<int>, Coleccion<string>, mayor<T> y el miembro estatico independiente por instanciacion.
+
+12) Copia profunda
+Crear un Refugio con animales, copiarlo con constructor de copia y con operator=.
+Resultado esperado: cada refugio posee sus propios objetos Animal; al destruirse no hay doble liberacion.
