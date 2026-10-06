@@ -1,7 +1,6 @@
 #ifndef COLECCION_H
 #define COLECCION_H
 
-#include <cstddef>
 #include "Excepciones.h"
 
 template <typename T>

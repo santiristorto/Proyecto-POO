@@ -1,19 +1,22 @@
 #include "Excepciones.h"
 
-ExcepcionRefugio::ExcepcionRefugio(const std::string& mensaje) : mensaje(mensaje) {}
+using namespace std;
+
+ExcepcionRefugio::ExcepcionRefugio(const string& mensaje)
+    : mensaje(mensaje) {}
 
 const char* ExcepcionRefugio::what() const noexcept {
     return mensaje.c_str();
 }
 
-IdRepetidoException::IdRepetidoException(const std::string& mensaje)
+IdRepetidoException::IdRepetidoException(const string& mensaje)
     : ExcepcionRefugio(mensaje) {}
 
-IndiceInvalidoException::IndiceInvalidoException(const std::string& mensaje)
+IndiceInvalidoException::IndiceInvalidoException(const string& mensaje)
     : ExcepcionRefugio(mensaje) {}
 
-AnimalNoDisponibleException::AnimalNoDisponibleException(const std::string& mensaje)
+AnimalNoDisponibleException::AnimalNoDisponibleException(const string& mensaje)
     : ExcepcionRefugio(mensaje) {}
 
-NoEncontradoException::NoEncontradoException(const std::string& mensaje)
+NoEncontradoException::NoEncontradoException(const string& mensaje)
     : ExcepcionRefugio(mensaje) {}

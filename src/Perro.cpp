@@ -1,23 +1,27 @@
 #include "Perro.h"
 #include <iostream>
 
-Perro::Perro() : Animal(), raza("Sin raza"), tamano("Sin especificar") {}
+using namespace std;
 
-Perro::Perro(int id, const std::string& nombre, int edad, const std::string& estadoSalud,
-             const std::string& raza, const std::string& tamano)
+Perro::Perro()
+    : Animal(), raza("Sin raza"), tamano("Sin especificar") {}
+
+Perro::Perro(int id, const string& nombre, int edad, const string& estadoSalud,
+             const string& raza, const string& tamano)
     : Animal(id, nombre, edad, estadoSalud), raza(raza), tamano(tamano) {}
 
-Perro::Perro(const Perro& otro) : Animal(otro), raza(otro.raza), tamano(otro.tamano) {}
+Perro::Perro(const Perro& otro)
+    : Animal(otro), raza(otro.raza), tamano(otro.tamano) {}
 
 void Perro::mostrarInfo() const {
-    std::cout << "[PERRO] ID: " << id
-              << " | Nombre: " << nombre
-              << " | Edad: " << edad
-              << " | Salud: " << estadoSalud
-              << " | Raza: " << raza
-              << " | Tamano: " << tamano
-              << " | Estado: " << (disponible ? "Disponible" : "No disponible")
-              << '\n';
+    cout << "[PERRO] ID: " << id
+         << " | Nombre: " << nombre
+         << " | Edad: " << edad
+         << " | Salud: " << estadoSalud
+         << " | Raza: " << raza
+         << " | Tamano: " << tamano
+         << " | Estado: " << (disponible ? "Disponible" : "No disponible")
+         << '\n';
 }
 
 Animal* Perro::clonar() const {

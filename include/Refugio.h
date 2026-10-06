@@ -1,7 +1,6 @@
 #ifndef REFUGIO_H
 #define REFUGIO_H
 
-#include <string>
 #include "Animal.h"
 #include "Adoptante.h"
 #include "SolicitudAdopcion.h"

@@ -1,6 +1,7 @@
 #ifndef PERRO_H
 #define PERRO_H
 
+#include <string>
 #include "Animal.h"
 
 class Perro : public Animal {
