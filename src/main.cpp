@@ -26,6 +26,9 @@ int pedirEntero(const string& mensaje) {
             return valor;
         }
 
+        if (cin.eof()) {
+            return 0;   // se acabo la entrada: devolver 0 (Salir) evita un bucle infinito
+        }
         cout << "Entrada invalida. Ingrese un numero.\n";
         limpiarEntrada();
     }
@@ -111,40 +114,26 @@ void buscarAnimal(Refugio& refugio) {
     refugio.buscarAnimal(id);
 }
 
-void probarColeccionNumeros() {
+// Muestra Coleccion<T> con dos tipos, la funcion generica mayor<T> y el miembro static.
+// Cada instanciacion (int, string) tiene su PROPIO contador "instancias".
+void probarTemplates() {
     Coleccion<int> numeros;
+    Coleccion<int> otrosNumeros;
+    Coleccion<string> nombres;
+
     numeros.agregar(10);
     numeros.agregar(25);
-
-    cout << "Mayor entre 10 y 25: " << mayor(10, 25) << '\n';
-    cout << "Primer numero: " << numeros[0] << '\n';
-}
-
-void probarColeccionNombres() {
-    Coleccion<string> nombres;
     nombres.agregar("Luna");
     nombres.agregar("Toby");
 
-    cout << "Mayor alfabeticamente entre Luna y Toby: "
-         << mayor(string("Luna"), string("Toby")) << '\n';
-}
+    cout << "Coleccion<int> tiene " << numeros.cantidad() << " elementos. Primero: " << numeros[0] << '\n';
+    cout << "Coleccion<string> tiene " << nombres.cantidad() << " elementos. Primero: " << nombres[0] << '\n';
 
-void mostrarInstanciasColeccion() {
-    cout << "Instancias de Coleccion<int>: "
-         << Coleccion<int>::getInstancias() << '\n';
-    cout << "Instancias de Coleccion<string>: "
-         << Coleccion<string>::getInstancias() << '\n';
-}
+    cout << "mayor(10, 25) = " << mayor(10, 25) << '\n';
+    cout << "mayor(\"Luna\", \"Toby\") = " << mayor(string("Luna"), string("Toby")) << '\n';
 
-void probarTemplates() {
-    cout << "--- Prueba de Coleccion<int> ---\n";
-    probarColeccionNumeros();
-
-    cout << "\n--- Prueba de Coleccion<string> ---\n";
-    probarColeccionNombres();
-
-    cout << "\n--- Miembro static ---\n";
-    mostrarInstanciasColeccion();
+    cout << "Instancias de Coleccion<int>: " << Coleccion<int>::getInstancias() << '\n';
+    cout << "Instancias de Coleccion<string>: " << Coleccion<string>::getInstancias() << '\n';
 }
 
 void mostrarMenu() {
@@ -159,9 +148,10 @@ void mostrarMenu() {
     cout << "8. Confirmar solicitud\n";
     cout << "9. Cancelar solicitud\n";
     cout << "10. Devolver animal al estado disponible\n";
-    cout << "11. Mostrar solicitudes e historial\n";
-    cout << "12. Mostrar adoptantes\n";
-    cout << "13. Pruebas de templates\n";
+    cout << "11. Mostrar solicitudes\n";
+    cout << "12. Mostrar historial de adopciones\n";
+    cout << "13. Mostrar adoptantes\n";
+    cout << "14. Demo de templates (Coleccion<T>)\n";
     cout << "0. Salir\n";
 }
 
@@ -201,9 +191,12 @@ void ejecutarOpcion(int opcion, Refugio& refugio) {
             refugio.mostrarSolicitudes();
             break;
         case 12:
-            refugio.mostrarAdoptantes();
+            refugio.mostrarHistorial();
             break;
         case 13:
+            refugio.mostrarAdoptantes();
+            break;
+        case 14:
             probarTemplates();
             break;
         case 0:
@@ -242,12 +235,6 @@ void ejecutarMenu(Refugio& refugio) {
 
 int main() {
     Refugio refugio;
-
-    // Pruebas de copia profunda de Refugio.
-    Refugio copia(refugio);
-    Refugio otraCopia;
-    otraCopia = refugio;
-
     ejecutarMenu(refugio);
     return 0;
 }

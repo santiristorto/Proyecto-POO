@@ -41,9 +41,31 @@ Usar operator[] con una posicion fuera del catalogo.
 Resultado esperado: IndiceInvalidoException.
 
 11) Templates
-Ejecutar opcion 13.
-Resultado esperado: funcionan Coleccion<int>, Coleccion<string>, mayor<T> y el miembro estatico independiente por instanciacion.
+Ejecutar opcion 14.
+Resultado esperado: funcionan Coleccion<int>, Coleccion<string>, mayor<T>; instancias: int=2, string=1 (contador estatico independiente por instanciacion).
 
-12) Copia profunda
-Crear un Refugio con animales, copiarlo con constructor de copia y con operator=.
-Resultado esperado: cada refugio posee sus propios objetos Animal; al destruirse no hay doble liberacion.
+12) Copia profunda y memoria
+Automatica: make test (pruebasMemoria en tests/test_refugio.cpp).
+Resultado esperado: cada refugio posee sus propios objetos Animal; Animal::getAnimalesVivos() vuelve al valor inicial al destruirlos.
+
+13) Historial
+Confirmar una solicitud y usar la opcion 12.
+Resultado esperado: aparece "animal adoptado por adoptante". Sin adopciones: "Todavia no hay adopciones en el historial."
+
+14) Devolver animal invalido
+Devolver un animal que ya esta disponible, o uno con solicitud pendiente.
+Resultado esperado: ExcepcionRefugio con mensaje, el animal no cambia.
+
+15) Confirmar/cancelar dos veces
+Confirmar o cancelar una solicitud que ya no esta pendiente.
+Resultado esperado: ExcepcionRefugio ("La solicitud ya no esta pendiente").
+
+16) Solicitud / adoptante inexistente
+Confirmar la solicitud 555; crear solicitud con adoptante 99.
+Resultado esperado: NoEncontradoException.
+
+17) Recorrido completo
+./refugio < tests/entrada_demo.txt
+Resultado esperado: el programa recorre registro, errores, solicitud, confirmacion, historial, devolucion, cancelacion y termina con "Saliendo del sistema...".
+
+Nota: los casos 1 a 11 y 13 a 16 tambien estan automatizados en tests/test_refugio.cpp (make test).

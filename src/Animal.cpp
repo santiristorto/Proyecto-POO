@@ -3,16 +3,20 @@
 using namespace std;
 
 Animal::Animal()
-    : id(0), nombre("Sin nombre"), edad(0), estadoSalud("No informado"), disponible(true) {}
+    : id(0), nombre("Sin nombre"), edad(0), estadoSalud("No informado"), disponible(true) {
+}
 
 Animal::Animal(int id, const string& nombre, int edad, const string& estadoSalud)
-    : id(id), nombre(nombre), edad(edad), estadoSalud(estadoSalud), disponible(true) {}
+    : id(id), nombre(nombre), edad(edad), estadoSalud(estadoSalud), disponible(true) {
+}
 
 Animal::Animal(const Animal& otro)
     : id(otro.id), nombre(otro.nombre), edad(otro.edad),
-      estadoSalud(otro.estadoSalud), disponible(otro.disponible) {}
+      estadoSalud(otro.estadoSalud), disponible(otro.disponible) {
+}
 
-Animal::~Animal() {}
+Animal::~Animal() {
+}
 
 int Animal::getId() const { return id; }
 string Animal::getNombre() const { return nombre; }

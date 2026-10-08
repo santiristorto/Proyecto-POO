@@ -114,4 +114,11 @@ int Coleccion<T>::getInstancias() {
     return instancias;
 }
 
+// Funcion generica: devuelve el mayor de dos valores del mismo tipo T.
+// Se usa con int y con std::string (ambos tienen operator<).
+template <typename T>
+const T& mayor(const T& a, const T& b) {
+    return (a < b) ? b : a;
+}
+
 #endif

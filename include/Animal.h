@@ -30,6 +30,7 @@ public:
 
     virtual void mostrarInfo() const = 0;
     virtual Animal* clonar() const = 0;
+
 };
 
 #endif

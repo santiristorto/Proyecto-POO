@@ -20,8 +20,9 @@ flowchart TD
     D -->|9| M[Cancelar solicitud]
     D -->|10| N[Devolver animal]
     D -->|11| O[Mostrar solicitudes]
-    D -->|12| P[Mostrar adoptantes]
-    D -->|13| Q[Probar templates]
+    D -->|12| P[Mostrar historial]
+    D -->|13| S[Mostrar adoptantes]
+    D -->|14| Q[Demo de templates]
     D -->|0| R([Fin])
     E --> B
     F --> B
@@ -36,6 +37,7 @@ flowchart TD
     O --> B
     P --> B
     Q --> B
+    S --> B
 ```
 
 ## Registrar perro/gato
@@ -43,10 +45,10 @@ flowchart TD
 ```mermaid
 flowchart TD
     A([Inicio]) --> B[Leer datos]
-    B --> C{ID repetido?}
-    C -->|Si| D[Throw IdRepetidoException]
-    C -->|No| E[Crear objeto]
-    E --> F[Agregar al catalogo]
+    B --> E[Crear objeto con new]
+    E --> C{ID repetido? operator==}
+    C -->|Si| D[delete del objeto y Throw IdRepetidoException]
+    C -->|No| F[Refugio guarda el puntero en el catalogo]
     F --> G[Mostrar exito]
     D --> H[Catch y mostrar error]
     G --> I([Fin])
@@ -72,7 +74,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A([Inicio]) --> B[Leer ID]
-    B --> C[Buscar con operator]
+    B --> C[Buscar con operator parentesis]
     C --> D{Existe?}
     D -->|No| E[Throw NoEncontradoException]
     D -->|Si| F[mostrarInfo polimorfico]
@@ -115,7 +117,7 @@ flowchart TD
     C -->|Si| E{Esta pendiente?}
     E -->|No| F[Throw ExcepcionRefugio]
     E -->|Si| G[Estado = CONFIRMADA]
-    G --> H[Animal queda no disponible]
+    G --> H[Animal sigue no disponible: ya fue adoptado]
     H --> I([Fin])
     D --> J[Catch]
     F --> J
@@ -146,20 +148,113 @@ flowchart TD
     A([Inicio]) --> B[Leer ID animal]
     B --> C{Existe?}
     C -->|No| D[Throw NoEncontrado]
-    C -->|Si| E[Animal = disponible]
+    C -->|Si| C2{Ya esta disponible?}
+    C2 -->|Si| D2[Throw ExcepcionRefugio]
+    C2 -->|No| C3{Tiene solicitud pendiente?}
+    C3 -->|Si| D2
+    C3 -->|No| E[Animal = disponible]
     E --> F[Mostrar exito]
     D --> G[Catch]
+    D2 --> G
     F --> H([Fin])
     G --> H
 ```
 
-## Listados
+## Listar todos los animales
 
 ```mermaid
 flowchart TD
-    A([Inicio]) --> B[Recorrer catalogo de Animal*]
-    B --> C{Quedan animales?}
-    C -->|Si| D[mostrarInfo]
-    D --> B
-    C -->|No| E([Fin])
+    A([Inicio]) --> B{Hay animales?}
+    B -->|No| C[Informar que no hay]
+    B -->|Si| D[actual = inicio del catalogo]
+    D --> E{actual menor que fin?}
+    E -->|Si| F[mostrarInfo polimorfico]
+    F --> G[actual avanza al siguiente puntero]
+    G --> E
+    E -->|No| H([Fin])
+    C --> H
+```
+
+## Listar animales disponibles
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[i = 0]
+    B --> C{i menor que cantidad?}
+    C -->|No| G{Se mostro alguno?}
+    C -->|Si| D{animal i disponible?}
+    D -->|Si| E[mostrarInfo]
+    D -->|No| F[siguiente]
+    E --> F
+    F --> C
+    G -->|No| H[Informar que no hay]
+    G -->|Si| I([Fin])
+    H --> I
+```
+
+## Mostrar solicitudes
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B{Hay solicitudes?}
+    B -->|No| C[Informar que no hay]
+    B -->|Si| D[Recorrer solicitudes]
+    D --> E[Mostrar cada una con su estado]
+    E --> F([Fin])
+    C --> F
+```
+
+## Mostrar historial de adopciones
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[Recorrer solicitudes]
+    B --> C{Quedan solicitudes?}
+    C -->|No| G{Se mostro alguna?}
+    C -->|Si| D{Estado CONFIRMADA?}
+    D -->|Si| E[Mostrar animal y adoptante]
+    D -->|No| B
+    E --> B
+    G -->|No| H[Historial vacio]
+    G -->|Si| I([Fin])
+    H --> I
+```
+
+## Mostrar adoptantes
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B{Hay adoptantes?}
+    B -->|No| C[Informar que no hay]
+    B -->|Si| D[Mostrar cada adoptante]
+    D --> E([Fin])
+    C --> E
+```
+
+## Demo de templates
+
+```mermaid
+flowchart TD
+    A([Inicio]) --> B[Crear Coleccion int x2 y Coleccion string x1]
+    B --> C[Agregar elementos]
+    C --> D[Mostrar mayor con int y con string]
+    D --> E[Mostrar instancias de cada tipo]
+    E --> F([Fin])
+```
+
+## Proceso completo de adopcion
+
+```mermaid
+flowchart TD
+    A([Animal disponible]) --> B[Crear solicitud]
+    B --> C[Solicitud PENDIENTE y animal reservado]
+    C --> D{Decision}
+    D -->|Confirmar| E[Solicitud CONFIRMADA, animal adoptado]
+    D -->|Cancelar| F[Solicitud CANCELADA]
+    F --> A
+    E --> G[Aparece en el historial]
+    G --> H{Se devuelve el animal?}
+    H -->|Si| I[Devolver animal]
+    I --> A
+    H -->|No| J([Fin])
 ```

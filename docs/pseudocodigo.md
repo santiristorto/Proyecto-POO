@@ -21,9 +21,10 @@ INICIO
             8: confirmar solicitud
             9: cancelar solicitud
             10: devolver animal
-            11: mostrar solicitudes e historial
-            12: mostrar adoptantes
-            13: ejecutar pruebas de templates
+            11: mostrar solicitudes
+            12: mostrar historial de adopciones
+            13: mostrar adoptantes
+            14: demo de templates
             0: salir
             OTRA: informar opción inválida
         FIN SEGÚN
@@ -50,9 +51,9 @@ INICIO
     verificar que el animal esté disponible
 
     crear solicitud en estado PENDIENTE
-    marcar animal como NO DISPONIBLE
+    marcar animal como NO DISPONIBLE (reservado)
 
-    mostrar solicitud creada
+    mostrar mensaje de éxito
 FIN
 ```
 
@@ -72,7 +73,7 @@ INICIO
     FIN SI
 
     cambiar estado a CONFIRMADA
-    mantener animal como NO DISPONIBLE
+    el animal sigue NO DISPONIBLE (ya fue adoptado)
 FIN
 ```
 
@@ -93,5 +94,80 @@ INICIO
 
     cambiar estado a CANCELADA
     cambiar animal a DISPONIBLE
+FIN
+```
+
+## Devolver animal
+
+```text
+INICIO
+    leer ID de animal
+    buscar animal
+
+    SI no existe
+        lanzar excepción
+    FIN SI
+
+    SI el animal ya está disponible
+        lanzar excepción
+    FIN SI
+
+    SI el animal tiene una solicitud pendiente
+        lanzar excepción
+    FIN SI
+
+    cambiar animal a DISPONIBLE
+FIN
+```
+
+## Registrar perro / gato / adoptante
+
+```text
+INICIO
+    leer datos
+    crear el objeto (new Perro / new Gato / Adoptante)
+
+    PARA cada animal ya registrado
+        SI tiene el mismo ID
+            liberar el objeto nuevo
+            lanzar excepción de ID repetido
+        FIN SI
+    FIN PARA
+
+    agregar al catálogo
+FIN
+```
+
+## Listar animales
+
+```text
+INICIO
+    SI no hay animales
+        informar y terminar
+    FIN SI
+
+    actual <- inicio del catálogo
+    fin <- inicio + cantidad
+
+    MIENTRAS actual < fin HACER
+        llamar a mostrarInfo() del animal apuntado (polimórfico)
+        avanzar actual al siguiente puntero
+    FIN MIENTRAS
+FIN
+```
+
+## Historial de adopciones
+
+```text
+INICIO
+    PARA cada solicitud
+        SI su estado es CONFIRMADA
+            mostrar nombre del animal y nombre del adoptante
+        FIN SI
+    FIN PARA
+
+    SI no se mostró ninguna
+        informar que el historial está vacío
+    FIN SI
 FIN
 ```

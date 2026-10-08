@@ -34,6 +34,16 @@ El sistema fue desarrollado aplicando los principales conceptos de Programación
 * Excepciones.
 * Manejo de errores.
 
+## Objetivos
+
+* Gestionar animales (perros y gatos), adoptantes, solicitudes de adopción e historial de adopciones desde la consola.
+* Integrar los contenidos de las Unidades 1 a 8: funciones, punteros, memoria dinámica, clases, sobrecarga de operadores, herencia, polimorfismo, templates y excepciones.
+* Escribir código modular y simple, en el que cada función tenga una única responsabilidad.
+
+## ¿Por qué este problema se adapta a la Programación Orientada a Objetos?
+
+El refugio está formado por "cosas" con datos y comportamiento propios: un animal tiene nombre, edad y estado, y sabe mostrarse; un adoptante tiene sus datos; una solicitud sabe confirmarse o cancelarse. Cada una se modela como una clase. Perros y gatos comparten datos comunes pero se muestran distinto, lo que se resuelve con herencia y polimorfismo. Con el paradigma procedural habría que repetir `if (tipo == perro) ... else ...` en todas partes; con POO se agrega un tipo nuevo sin tocar el resto.
+
 ---
 
 # 2. Requisitos para ejecutar el proyecto
@@ -160,16 +170,14 @@ git clone URL_DEL_REPOSITORIO
 Por ejemplo:
 
 ```bash
-git clone https://github.com/USUARIO/REPOSITORIO.git
+git clone https://github.com/santiristorto/Proyecto-POO.git
 ```
 
 Luego ingresar a la carpeta:
 
 ```bash
-cd REPOSITORIO
+cd Proyecto-POO
 ```
-
-> Reemplazar `URL_DEL_REPOSITORIO` y `REPOSITORIO` por los datos correspondientes al repositorio.
 
 ---
 
@@ -248,9 +256,12 @@ RefugioPOO/
 │   └── diagramas.md
 │
 ├── tests/
-│   └── casos_prueba.txt
+│   ├── casos_prueba.txt
+│   ├── test_refugio.cpp
+│   └── entrada_demo.txt
 │
 ├── Makefile
+├── GUIA_DEFENSA.md
 └── README.md
 ```
 
@@ -306,7 +317,7 @@ Luego ejecutar:
 .\refugio.exe
 ```
 
-Si se desea eliminar los archivos generados por la compilación:
+Para correr las pruebas automáticas: `make test`. Si se desea eliminar los archivos generados por la compilación:
 
 ```bash
 make clean
@@ -329,7 +340,7 @@ g++ -std=c++17 -Wall -Wextra -pedantic src/*.cpp -Iinclude -o refugio.exe
 Al iniciar el programa se muestra un menú similar al siguiente:
 
 ```text
-===== SISTEMA DE GESTIÓN DEL REFUGIO =====
+========== REFUGIO DE ANIMALES ==========
 
 1. Registrar perro
 2. Registrar gato
@@ -342,7 +353,9 @@ Al iniciar el programa se muestra un menú similar al siguiente:
 9. Cancelar solicitud
 10. Devolver animal a disponible
 11. Mostrar solicitudes
-12. Mostrar historial
+12. Mostrar historial de adopciones
+13. Mostrar adoptantes
+14. Demo de templates (Coleccion<T>)
 0. Salir
 ```
 
@@ -392,7 +405,7 @@ La información se muestra utilizando polimorfismo, de manera que cada tipo de a
 
 Muestra solamente aquellos animales que actualmente pueden ser adoptados.
 
-Un animal deja de estar disponible cuando su adopción es confirmada.
+Un animal deja de estar disponible apenas se crea una solicitud sobre él (queda reservado) y sigue así si la adopción se confirma. Si la solicitud se cancela, vuelve a estar disponible.
 
 ---
 
@@ -440,9 +453,10 @@ Permite confirmar una solicitud de adopción existente.
 
 Cuando una solicitud se confirma:
 
-* La solicitud cambia a su estado correspondiente.
-* El animal deja de estar disponible.
-* La operación queda registrada en el historial.
+* La solicitud pasa a estado *Confirmada*.
+* El animal sigue no disponible (ya fue adoptado).
+* La adopción aparece en el historial (opción 12).
+* Solo se pueden confirmar solicitudes que estén pendientes.
 
 ---
 
@@ -450,15 +464,15 @@ Cuando una solicitud se confirma:
 
 Permite cancelar una solicitud existente.
 
-La solicitud queda registrada con el estado correspondiente y no se completa la adopción.
+La solicitud pasa a estado *Cancelada*, el animal vuelve a estar disponible y no se completa la adopción. Solo se pueden cancelar solicitudes pendientes.
 
 ---
 
 ## 11.10. Devolver animal a disponible
 
-Permite cambiar nuevamente el estado de disponibilidad de un animal.
+Permite que un animal ya adoptado vuelva a estar disponible para una nueva adopción (por ejemplo, si el adoptante lo devuelve).
 
-Esta opción puede utilizarse cuando un animal debe volver a estar disponible para una nueva adopción.
+Da error si el animal ya está disponible o si tiene una solicitud pendiente (en ese caso hay que cancelarla primero).
 
 ---
 
@@ -472,11 +486,17 @@ Permite consultar el estado de las solicitudes realizadas.
 
 ## 11.12. Mostrar historial
 
-Muestra el historial de operaciones de adopción registradas por el sistema.
+Muestra las adopciones realizadas, es decir, las solicitudes confirmadas, con el nombre del animal y del adoptante.
 
 ---
 
-## 11.13. Salir
+## 11.13. Mostrar adoptantes y demo de templates
+
+La opción 13 lista los adoptantes registrados (sirve para ver sus IDs antes de crear una solicitud). La opción 14 muestra `Coleccion<int>`, `Coleccion<string>`, la función genérica `mayor` y el miembro estático.
+
+---
+
+## 11.14. Salir
 
 La opción:
 
@@ -557,7 +577,7 @@ Luego de confirmar, el animal dejará de aparecer entre los animales disponibles
 Seleccionar:
 
 ```text
-12. Mostrar historial
+12. Mostrar historial de adopciones
 ```
 
 De esta manera se puede comprobar que la adopción haya quedado registrada.
@@ -688,6 +708,36 @@ junto con excepciones personalizadas para controlar situaciones inválidas.
 
 ---
 
+## Memoria dinámica: quién crea, administra y libera
+
+| Memoria | La crea | La administra | La libera |
+|---|---|---|---|
+| Cada `Perro` / `Gato` | `main.cpp` (`new Perro`, `new Gato`) | `Refugio` (guarda el puntero en su catálogo) | `Refugio` (`delete` en `liberarAnimales`, llamado desde el destructor) |
+| Arreglo `Animal**` del catálogo | `Refugio` (`new Animal*[5]`, crece al doble) | `Refugio` | `Refugio` (`delete[]`) |
+| Arreglos de adoptantes y solicitudes | `Coleccion<T>` (`new T[]`) | `Coleccion<T>` | destructor de `Coleccion<T>` (`delete[]`) |
+
+Si se registra un animal con un ID repetido, `registrarAnimal` hace `delete` del objeto antes de lanzar la excepción, así no hay fuga.
+
+**¿Qué pasa al copiar un Refugio?** Se hace copia profunda: cada animal se duplica con `clonar()` (cada `Perro`/`Gato` devuelve `new` de sí mismo) y las colecciones se copian con su propio constructor de copia. Así cada refugio es dueño de sus propios objetos y nunca se libera la misma memoria dos veces.
+
+**Aritmética de punteros:** `Refugio::listarAnimales()` recorre el catálogo con `actual` y `fin` (`++actual`) en vez de usar índices.
+
+## Miembro estático en `Coleccion<T>`
+
+`Coleccion<T>` tiene `static int instancias`, que cuenta cuántas colecciones de ese tipo existen. Cada instanciación del template es una clase distinta, por lo que tiene su **propio** contador: `Coleccion<int>::instancias` y `Coleccion<string>::instancias` son independientes. En la opción 14 se crean dos `Coleccion<int>` y una `Coleccion<string>`, y se imprime 2 y 1. (`Animal` también tiene un contador estático, `animalesVivos`, que usan las pruebas para comprobar que no hay fugas.)
+
+## Decisiones de diseño
+
+* **`Animal` es abstracta** (`mostrarInfo()` y `clonar()` son virtuales puras) y tiene destructor virtual, para poder hacer `delete` de un `Perro` a través de un `Animal*`.
+* **Un único catálogo de `Animal*`** para perros y gatos; se recorre con polimorfismo.
+* **`SolicitudAdopcion` guarda IDs** (de adoptante y animal) en lugar de punteros, así no hay dos dueños del mismo objeto.
+* **Estados:** al crear una solicitud el animal queda reservado (no disponible); confirmar lo deja adoptado, cancelar lo libera. Así dos solicitudes no pueden competir por el mismo animal.
+* **Operadores con sentido:** `==` compara animales por ID (se usa para detectar duplicados), `!animal` significa "no está disponible" (se usa al crear solicitudes), `refugio[i]` da el animal en una posición y `refugio(id)` lo busca por ID.
+* **Excepciones propias** (`IdRepetidoException`, `IndiceInvalidoException`, `AnimalNoDisponibleException`, `NoEncontradoException`) que heredan de `ExcepcionRefugio` → `std::exception`. El menú las atrapa por referencia constante y sigue funcionando.
+* `Coleccion<T>` se reutiliza para guardar adoptantes y solicitudes, y así no se repite código de arreglos dinámicos.
+
+---
+
 # 15. Documentación adicional
 
 La carpeta `docs/` contiene documentación complementaria del proyecto.
@@ -698,32 +748,48 @@ docs/
 └── diagramas.md
 ```
 
-El pseudocódigo describe el funcionamiento general del sistema y los diagramas representan los principales procesos del programa.
+El pseudocódigo describe el funcionamiento de cada operación y los diagramas de flujo (Mermaid) representan el menú principal, el proceso de adopción completo y cada opción del sistema. 
 
 ---
 
 # 16. Pruebas
 
-La carpeta `tests/` contiene los casos de prueba utilizados para comprobar el funcionamiento del sistema.
+La carpeta `tests/` contiene:
 
 ```text
 tests/
-└── casos_prueba.txt
+├── casos_prueba.txt     (casos de prueba para hacer a mano desde el menú)
+├── test_refugio.cpp     (pruebas automáticas)
+└── entrada_demo.txt     (secuencia de entradas para el menú)
 ```
 
-Las pruebas contemplan tanto situaciones correctas como situaciones de error.
+## Pruebas automáticas
 
-Se incluyen pruebas relacionadas con:
+```bash
+make test
+```
 
-* Registro de animales.
-* Búsqueda.
-* Disponibilidad.
-* Solicitudes de adopción.
-* IDs duplicados.
-* Índices inválidos.
-* Manejo de excepciones.
-* Copia de objetos.
-* Liberación de memoria.
+Compila `tests/test_refugio.cpp` junto con el resto del código (sin `main.cpp`), lo ejecuta y muestra `[OK]` o `[FALLA]` por cada caso. Sin `make`:
+
+```bash
+g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude tests/test_refugio.cpp src/Adoptante.cpp src/Animal.cpp src/Excepciones.cpp src/Gato.cpp src/Perro.cpp src/Refugio.cpp src/SolicitudAdopcion.cpp -o test_refugio
+./test_refugio
+```
+
+Cubren:
+
+* **Casos correctos:** registrar perro y gato, listar, registrar adoptante, buscar, crear/confirmar/cancelar solicitud, devolver animal, historial.
+* **Casos incorrectos:** ID de animal, adoptante y solicitud duplicado; animal, adoptante y solicitud inexistente; índice inválido; animal no disponible; devolver un animal ya disponible o con solicitud pendiente; confirmar o cancelar una solicitud que ya no está pendiente.
+* **Templates:** `Coleccion<int>`, `Coleccion<string>`, `mayor<T>` y el miembro estático.
+* **Memoria:** copia profunda con constructor de copia y `operator=`, autoasignación y liberación. El contador `Animal::getAnimalesVivos()` demuestra que, al destruir los refugios, vuelve al valor inicial (no hay fugas).
+
+## Recorrido completo por el menú
+
+```bash
+./refugio < tests/entrada_demo.txt
+```
+
+(en Windows: `.\refugio.exe < tests/entrada_demo.txt` desde cmd, o `Get-Content tests/entrada_demo.txt | .\refugio.exe` desde PowerShell).
 
 ---
 
