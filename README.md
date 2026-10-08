@@ -161,7 +161,7 @@ Existen dos formas de obtener el proyecto.
 
 ## Opción A — Descargar desde GitHub
 
-Si el proyecto se encuentra en GitHub, abrir una terminal y ejecutar:
+Para descargar el proyecto desde GitHub, abrir una terminal y ejecutar:
 
 ```bash
 git clone URL_DEL_REPOSITORIO
@@ -257,11 +257,9 @@ RefugioPOO/
 │
 ├── tests/
 │   ├── casos_prueba.txt
-│   ├── test_refugio.cpp
-│   └── entrada_demo.txt
+│   └── test_refugio.cpp
 │
 ├── Makefile
-├── GUIA_DEFENSA.md
 └── README.md
 ```
 
@@ -759,8 +757,7 @@ La carpeta `tests/` contiene:
 ```text
 tests/
 ├── casos_prueba.txt     (casos de prueba para hacer a mano desde el menú)
-├── test_refugio.cpp     (pruebas automáticas)
-└── entrada_demo.txt     (secuencia de entradas para el menú)
+└── test_refugio.cpp     (pruebas automáticas)
 ```
 
 ## Pruebas automáticas
@@ -781,17 +778,7 @@ Cubren:
 * **Casos correctos:** registrar perro y gato, listar, registrar adoptante, buscar, crear/confirmar/cancelar solicitud, devolver animal, historial.
 * **Casos incorrectos:** ID de animal, adoptante y solicitud duplicado; animal, adoptante y solicitud inexistente; índice inválido; animal no disponible; devolver un animal ya disponible o con solicitud pendiente; confirmar o cancelar una solicitud que ya no está pendiente.
 * **Templates:** `Coleccion<int>`, `Coleccion<string>`, `mayor<T>` y el miembro estático.
-* **Memoria:** copia profunda con constructor de copia y `operator=`, autoasignación y liberación. El contador `Animal::getAnimalesVivos()` demuestra que, al destruir los refugios, vuelve al valor inicial (no hay fugas).
-
-## Recorrido completo por el menú
-
-```bash
-./refugio < tests/entrada_demo.txt
-```
-
-(en Windows: `.\refugio.exe < tests/entrada_demo.txt` desde cmd, o `Get-Content tests/entrada_demo.txt | .\refugio.exe` desde PowerShell).
-
----
+* **Memoria:** copia profunda con constructor de copia y `operator=`, autoasignación y liberación.
 
 # 17. Solución de problemas frecuentes
 
