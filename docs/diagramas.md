@@ -1,6 +1,6 @@
 # Diagramas de flujo
 
-Los siguientes diagramas pueden pegarse en un editor compatible con Mermaid o utilizarse como guía para dibujarlos en Word/diagrams.net.
+Los siguientes diagramas pueden pegarse en un editor compatible con Mermaid o utilizarse como guía para dibujarlos en Word/diagrams.net. Estan Incluidos los Diagramas graficados en la carpeta Diagramas.
 
 ## Menú principal
 
@@ -11,7 +11,7 @@ flowchart TD
     C --> D{Opcion}
     D -->|1| E[Registrar perro]
     D -->|2| F[Registrar gato]
-    D -->|3| G[Listar animales]
+    D -->|3| G[Listar animales] 
     D -->|4| H[Listar disponibles]
     D -->|5| I[Registrar adoptante]
     D -->|6| J[Buscar animal]

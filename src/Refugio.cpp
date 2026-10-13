@@ -4,8 +4,6 @@
 
 using namespace std;
 
-// ---------- Constructores, Regla de los Tres ----------
-
 Refugio::Refugio()
     : animales(new Animal*[5]), cantidadAnimales(0), capacidadAnimales(5),
       adoptantes(), solicitudes() {}
@@ -30,9 +28,6 @@ Refugio::~Refugio() {
     liberarAnimales();
 }
 
-// ---------- Manejo interno de la memoria de animales ----------
-
-// Libera cada Animal (delete) y despues el arreglo de punteros (delete[]).
 void Refugio::liberarAnimales() {
     for (int i = 0; i < cantidadAnimales; ++i) {
         delete animales[i];
@@ -43,7 +38,6 @@ void Refugio::liberarAnimales() {
     capacidadAnimales = 0;
 }
 
-// Copia PROFUNDA: cada Animal se duplica con clonar() (no se copian los punteros).
 void Refugio::copiarAnimales(const Refugio& otro) {
     capacidadAnimales = otro.capacidadAnimales;
     cantidadAnimales = otro.cantidadAnimales;
@@ -57,14 +51,12 @@ void Refugio::redimensionarAnimales() {
     int nuevaCapacidad = capacidadAnimales * 2;
     Animal** nuevos = new Animal*[nuevaCapacidad];
     for (int i = 0; i < cantidadAnimales; ++i) {
-        nuevos[i] = animales[i];   // solo se mueven los punteros; los Animal no se copian
+        nuevos[i] = animales[i]; 
     }
     delete[] animales;
     animales = nuevos;
     capacidadAnimales = nuevaCapacidad;
 }
-
-// ---------- Busquedas internas ----------
 
 Animal* Refugio::buscarAnimalPtr(int id) const {
     for (int i = 0; i < cantidadAnimales; ++i) {
@@ -102,14 +94,11 @@ bool Refugio::tieneSolicitudPendiente(int idAnimal) const {
     return false;
 }
 
-// ---------- Registros ----------
-
 void Refugio::registrarAnimal(Animal* animal) {
     if (animal == nullptr) {
         throw ExcepcionRefugio("No se puede registrar un animal nulo.");
     }
 
-    // operator== compara los animales por ID
     for (int i = 0; i < cantidadAnimales; ++i) {
         if (*animales[i] == *animal) {
             delete animal;   // el Refugio es el dueno del puntero, asi que lo libera
@@ -131,9 +120,6 @@ void Refugio::registrarAdoptante(const Adoptante& adoptante) {
     adoptantes.agregar(adoptante);
 }
 
-// ---------- Proceso de adopcion ----------
-// Animal disponible -> crearSolicitud (animal reservado) -> confirmar (adoptado) o cancelar (vuelve a disponible)
-
 void Refugio::crearSolicitud(int idSolicitud, int idAdoptante, int idAnimal) {
     if (buscarSolicitud(idSolicitud) != nullptr) {
         throw IdRepetidoException("Ya existe una solicitud con ese ID.");
@@ -146,12 +132,12 @@ void Refugio::crearSolicitud(int idSolicitud, int idAdoptante, int idAnimal) {
     if (animal == nullptr) {
         throw NoEncontradoException("No existe el animal indicado.");
     }
-    if (!(*animal)) {   // operator! : "el animal NO esta disponible"
+    if (!(*animal)) {  
         throw AnimalNoDisponibleException("El animal no esta disponible para una nueva solicitud.");
     }
 
     solicitudes.agregar(SolicitudAdopcion(idSolicitud, idAdoptante, idAnimal));
-    animal->setDisponible(false);   // queda reservado mientras la solicitud esta pendiente
+    animal->setDisponible(false);   
 }
 
 void Refugio::confirmarSolicitud(int idSolicitud) {
@@ -162,7 +148,7 @@ void Refugio::confirmarSolicitud(int idSolicitud) {
     if (!solicitud->estaPendiente()) {
         throw ExcepcionRefugio("La solicitud ya no esta pendiente.");
     }
-    solicitud->confirmar();   // el animal sigue no disponible: ya fue adoptado
+    solicitud->confirmar();  
 }
 
 void Refugio::cancelarSolicitud(int idSolicitud) {
@@ -195,10 +181,6 @@ void Refugio::devolverAnimal(int idAnimal) {
     animal->setDisponible(true);
 }
 
-// ---------- Listados ----------
-
-// Recorrido del catalogo con ARITMETICA DE PUNTEROS (actual++ avanza al siguiente Animal*).
-// Cada llamada a mostrarInfo() es polimorfica: se ejecuta la version de Perro o de Gato.
 void Refugio::listarAnimales() const {
     if (cantidadAnimales == 0) {
         cout << "No hay animales registrados.\n";
@@ -218,7 +200,7 @@ void Refugio::listarDisponibles() const {
     bool hayDisponibles = false;
 
     for (int i = 0; i < cantidadAnimales; ++i) {
-        const Animal& animal = (*this)[i];   // usa operator[]
+        const Animal& animal = (*this)[i];   
         if (animal.estaDisponible()) {
             animal.mostrarInfo();
             hayDisponibles = true;
@@ -231,7 +213,7 @@ void Refugio::listarDisponibles() const {
 }
 
 void Refugio::buscarAnimal(int id) const {
-    const Animal* animal = (*this)(id);   // usa operator()
+    const Animal* animal = (*this)(id);  
 
     if (animal == nullptr) {
         throw NoEncontradoException("No existe un animal con ese ID.");
@@ -249,7 +231,6 @@ void Refugio::mostrarSolicitudes() const {
     }
 }
 
-// El historial son las solicitudes CONFIRMADAS (adopciones realizadas).
 void Refugio::mostrarHistorial() const {
     bool hayAdopciones = false;
 
@@ -285,7 +266,6 @@ void Refugio::mostrarAdoptantes() const {
     }
 }
 
-// ---------- Operadores ----------
 
 Animal& Refugio::operator[](int posicion) {
     if (posicion < 0 || posicion >= cantidadAnimales) {

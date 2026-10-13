@@ -1,4 +1,3 @@
-// Pruebas automaticas del Refugio. Compilar y ejecutar con:  make test
 #include <iostream>
 #include <string>
 
@@ -23,8 +22,6 @@ void verificar(bool condicion, const string& descripcion) {
     }
 }
 
-// Ejecuta una operacion y dice si lanzo la excepcion E.
-// Se usa asi: lanza<IdRepetidoException>([&] { ... });
 template <typename E, typename Funcion>
 bool lanza(Funcion operacion) {
     try {
@@ -37,7 +34,6 @@ bool lanza(Funcion operacion) {
     return false;
 }
 
-// Refugio de prueba: 1 perro (ID 1), 1 gato (ID 2), 1 adoptante (ID 10)
 void cargarDatos(Refugio& r) {
     r.registrarAnimal(new Perro(1, "Firulais", 3, "Sano", "Labrador", "Grande"));
     r.registrarAnimal(new Gato(2, "Mishi", 2, "Sano", "Negro", "Interior"));
@@ -68,7 +64,6 @@ void pruebasCorrectas() {
     r.cancelarSolicitud(101);
     verificar(r(2)->estaDisponible(), "cancelar solicitud: animal vuelve a disponible");
 
-    // Estos listados solo imprimen; verificamos que no fallen.
     r.listarAnimales();
     r.listarDisponibles();
     r.mostrarSolicitudes();
@@ -146,7 +141,7 @@ void pruebasTemplates() {
               "el miembro static es independiente en cada instanciacion");
     verificar(mayor(3, 9) == 9 && mayor(string("a"), string("b")) == "b", "funcion generica mayor<T> con int y string");
 
-    for (int i = 0; i < 20; ++i) {   // fuerza redimensionar
+    for (int i = 0; i < 20; ++i) {  
         numeros.agregar(i);
     }
     verificar(numeros.cantidad() == 22 && numeros[21] == 19, "Coleccion crece sola");
@@ -159,18 +154,18 @@ void pruebasMemoria() {
         Refugio original;
         cargarDatos(original);
 
-        Refugio copia(original);                       // constructor de copia
+        Refugio copia(original);                      
         verificar(copia(1) != original(1), "los punteros de la copia son distintos a los del original");
 
         copia(1)->setDisponible(false);
         verificar(original(1)->estaDisponible(), "modificar la copia no afecta al original");
 
         Refugio asignado;
-        asignado = original;                           // operator=
+        asignado = original;                          
 
-        asignado = original;                           // reasignar: no debe perder ni duplicar memoria
+        asignado = original;                          
 
-        asignado = asignado;                           // autoasignacion
+        asignado = asignado;                           
         verificar(asignado.cantidadAnimalesRegistrados() == 2,
                   "autoasignacion no rompe nada");
     }

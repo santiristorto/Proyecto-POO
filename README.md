@@ -229,7 +229,7 @@ tests
 La estructura general del proyecto es:
 
 ```text
-RefugioPOO/
+Proyecto-POO/
 │
 ├── include/
 │   ├── Animal.h
@@ -743,7 +743,8 @@ La carpeta `docs/` contiene documentación complementaria del proyecto.
 ```text
 docs/
 ├── pseudocodigo.md
-└── diagramas.md
+├── diagramas.md
+└── Diagramas
 ```
 
 El pseudocódigo describe el funcionamiento de cada operación y los diagramas de flujo (Mermaid) representan el menú principal, el proceso de adopción completo y cada opción del sistema. 
@@ -802,20 +803,6 @@ g++ --version
 
 ---
 
-## Error: `make no se reconoce`
-
-No es un problema del proyecto.
-
-`make` es opcional.
-
-Se puede compilar directamente utilizando:
-
-```bash
-g++ -std=c++17 -Wall -Wextra -pedantic src/*.cpp -Iinclude -o refugio.exe
-```
-
----
-
 ## Error: `src/*.cpp` no se encuentra
 
 Probablemente la terminal no está ubicada en la carpeta principal del proyecto.
@@ -851,78 +838,21 @@ Si la compilación termina sin errores, ejecutar:
 
 ---
 
-# 18. Compilación rápida
-
-Para una persona que ya tiene todo instalado, los pasos mínimos son:
-
-### 1. Abrir la carpeta del proyecto
-
-### 2. Abrir una terminal
-
-### 3. Compilar
-
-```bash
-g++ -std=c++17 -Wall -Wextra -pedantic src/*.cpp -Iinclude -o refugio.exe
-```
-
-### 4. Ejecutar
-
-```bash
-.\refugio.exe
-```
-
-### 5. Utilizar el menú
-
-Seguir las instrucciones mostradas por el programa.
-
-
-# 19. Resumen de instalación desde cero
-
-Si una persona comienza completamente desde cero en Windows, debe realizar estos pasos en orden:
-
-1. Instalar Git (si va a descargar el proyecto desde GitHub).
-                ↓
-2. Instalar Visual Studio Code.
-                ↓
-3. Instalar MSYS2.
-                ↓
-4. Instalar GCC mediante MSYS2.
-                ↓
-5. Agregar C:\msys64\ucrt64\bin al PATH.
-                ↓
-6. Descargar/clonar el proyecto.
-                ↓
-7. Abrir la carpeta del proyecto en VS Code.
-                ↓
-8. Abrir una terminal.
-                ↓
-9. Verificar g++ --version.
-                ↓
-10. Compilar con g++.
-                ↓
-11. Ejecutar .\refugio.exe
-                ↓
-12. Utilizar el menú principal.
-```
-
----
-
-# 20. Autores
+# 18. Autores
 
 **Integrantes del grupo:**
-
 * Santiago Ristorto
 * Alvaro Mercado
 
 ---
 
-# 21. Fecha de entrega
+# 19. Fecha de entrega
 
 13/10/2026
 
 ---
 
-# 22. Tecnologías utilizadas
+# 20. Tecnologías utilizadas
 
 * C++
 * C++17

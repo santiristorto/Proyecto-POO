@@ -1,7 +1,6 @@
 #include <iostream>
 #include <limits>
 #include <string>
-
 #include "Refugio.h"
 #include "Perro.h"
 #include "Gato.h"
@@ -27,7 +26,7 @@ int pedirEntero(const string& mensaje) {
         }
 
         if (cin.eof()) {
-            return 0;   // se acabo la entrada: devolver 0 (Salir) evita un bucle infinito
+            return 0;   
         }
         cout << "Entrada invalida. Ingrese un numero.\n";
         limpiarEntrada();
@@ -114,8 +113,6 @@ void buscarAnimal(Refugio& refugio) {
     refugio.buscarAnimal(id);
 }
 
-// Muestra Coleccion<T> con dos tipos, la funcion generica mayor<T> y el miembro static.
-// Cada instanciacion (int, string) tiene su PROPIO contador "instancias".
 void probarTemplates() {
     Coleccion<int> numeros;
     Coleccion<int> otrosNumeros;
@@ -137,7 +134,7 @@ void probarTemplates() {
 }
 
 void mostrarMenu() {
-    cout << "\n========== REFUGIO DE ANIMALES ==========\n";
+    cout << "\nREFUGIO DE ANIMALES\n";
     cout << "1. Registrar perro\n";
     cout << "2. Registrar gato\n";
     cout << "3. Listar todos los animales\n";
